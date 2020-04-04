@@ -1,6 +1,5 @@
 module Classable
   class Board
-    attr_accessor :board, :row_contents
     attr_reader :code
 
     def initialize
@@ -29,15 +28,10 @@ module Classable
     def feedback 
       guess = @board.last
       @feedback = []
-      4.times do |i|
-        guess_duplicates = guess.count {|e| e == guess[i]}
-        code_duplicates = @code.count {|e| e == guess[i]}
-        @feedback << "X" if @code[i] == guess[i]
-        if @code.include? guess[i] 
-          @feedback << "O" unless @code[i] == guess[i]
-        end
+      guess.each_with_index do |e, i|
+        @feedback << "X" if @code[i] == e
       end
-      @feedback.sort!.reverse!
+      @feedback #.sort!.reverse!
     end
 
     private
@@ -55,17 +49,13 @@ module Classable
   class Game < Board
     def initialize
       super
-      @code = [
-        @@colors[rand(6)], 
-        @@colors[rand(6)], 
-        @@colors[rand(6)], 
-        @@colors[rand(6)]
-      ]
+      4.times { @code << @@colors[rand(6)] }
     end
 
     def self.game_start
       game = Board.new
       puts game.code
+      puts
       game.create_guess(gets.chomp.split)
       game.feedback
       game.display_board
