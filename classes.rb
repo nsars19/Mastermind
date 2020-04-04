@@ -18,8 +18,8 @@ module Classable
     end
 
     def create_row
+      @row_contents = []
       4.times do
-        @row_contents = []
         @row_contents << @colors[rand(6)]
       end
     end
