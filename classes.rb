@@ -47,6 +47,8 @@ module Classable
   end
 
   class Game < Board
+    ROUNDS = 12
+    
     def initialize
       super
       4.times { @code << @@colors[rand(6)] }
