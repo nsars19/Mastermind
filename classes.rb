@@ -7,6 +7,7 @@ module Classable
       @@colors = %w[red orange yellow green blue purple]
       @board = []
       @code = []
+      create_code_cpu
     end
 
     def colors
@@ -16,12 +17,6 @@ module Classable
     def display_board
       @board.each do |e|
         puts "#{e} | #{@feedback}"
-      end
-    end
-
-    def create_code_cpu
-      4.times do
-        @code << @@colors[rand(6)]
       end
     end
 
@@ -35,7 +30,8 @@ module Classable
       guess = @board.last
       @feedback = []
       4.times do |i|
-        color = color_count[guess[i].to_sym]
+        guess_duplicates = guess.count {|e| e == guess[i]}
+        code_duplicates = @code.count {|e| e == guess[i]}
         @feedback << "X" if @code[i] == guess[i]
         if @code.include? guess[i] 
           @feedback << "O" unless @code[i] == guess[i]
@@ -43,10 +39,16 @@ module Classable
       end
       @feedback.sort!.reverse!
     end
-    
+
     private
     def create_code *colors
       @code = colors[0..3]
+    end
+
+    def create_code_cpu
+      4.times do
+        @code << @@colors[rand(6)]
+      end
     end
   end
 
@@ -63,7 +65,6 @@ module Classable
 
     def self.game_start
       game = Board.new
-      game.create_code_cpu
       puts game.code
       game.create_guess(gets.chomp.split)
       game.feedback
