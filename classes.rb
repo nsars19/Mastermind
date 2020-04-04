@@ -26,12 +26,16 @@ module Classable
     end
 
     def feedback 
-      guess = @board.last
       @feedback = []
+      guess = @board.last
       guess.each_with_index do |e, i|
-        @feedback << "X" if @code[i] == e
+        if @code[i] == e
+          @feedback << "X"
+        elsif @code.include?(e)
+          @feedback << "O" 
+        end
       end
-      @feedback #.sort!.reverse!
+      @feedback.sort!.reverse!
     end
 
     private
