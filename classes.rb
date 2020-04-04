@@ -6,6 +6,7 @@ module Classable
       @@colors = %w[red orange yellow green blue purple]
       @board = []
       @code = []
+      @feedback = []
       create_code_cpu
     end
 
@@ -13,10 +14,16 @@ module Classable
       @@colors
     end
 
+    def self.board
+      @board
+    end
+
     def display_board
+      puts "\nCurrent Board:"
       @board.each do |e|
-        puts "#{e} | #{@feedback}"
+        puts "#{e.join(' ')} | #{@feedback.join(' ')}"
       end
+      puts
     end
 
     def create_guess *colors
@@ -60,18 +67,22 @@ module Classable
 
     def self.game_start
       game = Board.new
+      @@turn = 1
       puts game.code
-      puts
-      game.create_guess(gets.chomp.split)
-      game.feedback
-      game.display_board
+      until Game.over?
+        game.create_guess(gets.chomp.split)
+        game.feedback
+        game.display_board
+        @@turn += 1
+        break if Game.over?
+      end
     end
-  end
 
-  class Row < Board
-  end
-
-  class FeedbackPegs
+    def self.over?
+      return true if @@turn == ROUNDS
+      return true if @feedback.join('') == "XXXX"
+      false
+    end
   end
 end
 
