@@ -46,10 +46,6 @@ module Classable
     end
     
     private
-    def create_code *colors
-      @code = colors[0..3]
-    end
-
     def create_code_cpu
       4.times { |i| @code[i] = @@colors[rand(6)] }
     end
@@ -58,7 +54,7 @@ module Classable
   class Game < Board
     ROUNDS = 12
 
-    def self.game_start
+    def self.game_start_codebreaker
       @game = Board.new
       @@turn = 0
       puts @game.code
@@ -89,35 +85,29 @@ module Classable
   end
 
   class Creator < Game
-    # def initialize
-    #   puts "Would you like to create the code or guess the code?"
-    #   @make_or_break = gets.chomp
-    #   until @make_or_break == "create" || @make_or_break == "guess"
-    #     puts "Please choose 'create' or 'guess'"
-    #     @make_or_break = gets.chomp
-    #   end
-    #   self.game_start
-    # end
-
-    def self.game_start
+    def self.game_start_codebreaker
       puts "Would you like to create the code or guess the code?"
-      @make_or_break = gets.chomp
       until @make_or_break == "create" || @make_or_break == "guess"
         puts "Please choose 'create' or 'guess'"
         @make_or_break = gets.chomp
       end
-      Classable::Game.game_start if @make_or_break == "guess"
+
+      Classable::Game.game_start_codebreaker  if @make_or_break == "guess"
+      Classable::Creator.game_start_codemaker if @make_or_break == "create"
     end
     
     private
-    def codemaker?
-      true if @make_or_break == "create"
+    def self.game_start_codemaker
+      game = Classable::Board.new
+      puts "Please select four colors from the list:\n#{@@colors.join(', ')}"
+      Classable::Creator.create_code_player(gets.chomp)
+      
     end
 
-    def codebreaker?
-      true if @make_or_break == "guess"
+    def self.create_code_player *colors
+      @code = colors[0..3]
     end
   end
 end
 
-Classable::Creator.game_start
+Classable::Creator.game_start_codebreaker
