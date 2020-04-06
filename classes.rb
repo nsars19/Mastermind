@@ -67,6 +67,7 @@ module Classable
       puts "\nYOU LOSE!" if Game.lose? unless Game.win?
     end
 
+    private
     def self.over?
       return true if @@turn == ROUNDS
       return true if @game.board.last == @game.code 
