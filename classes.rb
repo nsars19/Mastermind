@@ -3,13 +3,14 @@ module Classable
     attr_accessor :code
     attr_reader :board
 
-    def initialize
+    def initialize make_or_break
       @@colors = %w[red orange yellow green blue purple]
       @board = []
       @code = Array.new(4, nil)
       @feedback_holder = []
       @board_feedback = []
-      create_code_cpu
+      create_code_cpu if make_or_break == :cpu
+      create_code_player if make_or_break == :player
     end
 
     def create_guess *colors
@@ -45,7 +46,11 @@ module Classable
       puts "|___________________________|_________|\n\n"
     end
     
+    def create_code_player *colors
+      @code = colors[0..3]
+    end
     private
+
     def create_code_cpu
       4.times { |i| @code[i] = @@colors[rand(6)] }
     end
@@ -55,9 +60,9 @@ module Classable
     ROUNDS = 12
 
     def self.game_start_codebreaker
-      @game = Board.new
+      @game = Board.new(:cpu)
       @@turn = 0
-      puts @game.code
+      puts @game.code #### REMOVE ME WHEN FINISHED
       until Game.over?
         puts "Enter your guess:"
         @game.create_guess(gets.chomp.split[0..3])
@@ -98,10 +103,10 @@ module Classable
     
     private
     def self.game_start_codemaker
-      game = Classable::Board.new
+      game = Board.new(:player)
       puts "Please select four colors from the list:\n#{@@colors.join(', ')}"
-      Classable::Creator.create_code_player(gets.chomp)
-      
+      game.create_code_player(gets.chomp)
+      p game.code
     end
 
     def self.create_code_player *colors
