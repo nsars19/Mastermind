@@ -1,6 +1,7 @@
 module Classable
   class Board
-    attr_reader :code, :board
+    attr_accessor :code
+    attr_reader :board
 
     def initialize
       @@colors = %w[red orange yellow green blue purple]
@@ -9,10 +10,6 @@ module Classable
       @feedback_holder = []
       @board_feedback = []
       create_code_cpu
-    end
-
-    def self.board
-      @board
     end
 
     def create_guess *colors
@@ -86,6 +83,9 @@ module Classable
     def self.lose?
       @@turn == ROUNDS ? true : false
     end
+  end
+
+  class Creator < Game
   end
 end
 
