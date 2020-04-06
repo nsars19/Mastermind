@@ -63,17 +63,17 @@ module Classable
 
     def self.game_start
       @game = Board.new
-      @@turn = 1
+      @@turn = 0
       puts @game.code
-      @game.create_guess(gets.chomp.split)
       until Game.over?
+        puts "Enter your guess:"
+        @game.create_guess(gets.chomp.split)
         @game.feedback
         @game.display_board
         @@turn += 1
-        @game.create_guess(gets.chomp.split)
       end
       puts "\nYOU WIN!" if Game.win?
-      puts "\nYOU LOSE!" if Game.lose?
+      puts "\nYOU LOSE!" if Game.lose? unless Game.win?
     end
 
     def self.over?
