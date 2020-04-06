@@ -53,8 +53,6 @@ module Classable
   end
 
   class Game < Board
-    attr_reader :board
-    
     ROUNDS = 12
 
     def self.code
