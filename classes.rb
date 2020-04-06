@@ -33,10 +33,12 @@ module Classable
 
     def display_board
       puts "\nCurrent Board:"
+      puts " _____________________________________"
       @board.each_with_index do |e,i|
-        puts "#{e.join(' ')} | #{@board_feedback[i].join(' ')}"
+        puts "|#{e.join(' ')}#{" " * (27 - (e.join(' ').length))}| #{@board_feedback[i].join(' ')}#{" " * 
+              (8 - (@board_feedback[i].join(' ').length))}|"
       end
-      puts
+      puts "|_____________________________________|\n\n"
     end
     
     private
@@ -83,19 +85,35 @@ module Classable
   end
 
   class Creator < Game
-    def self.game_start
+    # def initialize
+    #   puts "Would you like to create the code or guess the code?"
+    #   @make_or_break = gets.chomp
+    #   until @make_or_break == "create" || @make_or_break == "guess"
+    #     puts "Please choose 'create' or 'guess'"
+    #     @make_or_break = gets.chomp
+    #   end
+    #   self.game_start
+    # end
 
+    def self.game_start
+      puts "Would you like to create the code or guess the code?"
+      @make_or_break = gets.chomp
+      until @make_or_break == "create" || @make_or_break == "guess"
+        puts "Please choose 'create' or 'guess'"
+        @make_or_break = gets.chomp
+      end
+      Classable::Game.game_start if @make_or_break == "guess"
     end
     
     private
     def codemaker?
-      true if @code_maker
+      true if @make_or_break == "create"
     end
 
     def codebreaker?
-      true if @code_breaker
+      true if @make_or_break == "guess"
     end
   end
 end
 
-Classable::Game.game_start
+Classable::Creator.game_start
