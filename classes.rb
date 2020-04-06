@@ -6,7 +6,8 @@ module Classable
       @@colors = %w[red orange yellow green blue purple]
       @board = []
       @code = []
-      @feedback = []
+      @feedback_holder = []
+      @board_feedback = []
       create_code_cpu
     end
 
@@ -20,29 +21,29 @@ module Classable
 
     def display_board
       puts "\nCurrent Board:"
-      @board.each do |e|
-        puts "#{e.join(' ')} | #{@feedback.join(' ')}"
+      @board.each_with_index do |e,i|
+        puts "#{e.join(' ')} | #{@board_feedback[i].join(' ')}"
       end
       puts
     end
 
     def create_guess *colors
-      @row_contents = []
-      @row_contents = colors
-      @board << @row_contents.flatten
+      @guess_contents = []
+      @guess_contents = colors
+      @board << @guess_contents.flatten
     end
 
     def feedback 
-      @feedback = []
+      @feedback_holder = []
       guess = @board.last
       guess.each_with_index do |e, i|
         if @code[i] == e
-          @feedback << "X"
+          @feedback_holder << "X"
         elsif @code.include?(e)
-          @feedback << "O" 
+          @feedback_holder << "O" 
         end
       end
-      @feedback.sort!.reverse!
+      @board_feedback << @feedback_holder.sort!.reverse!
     end
 
     private
@@ -56,6 +57,8 @@ module Classable
   end
 
   class Game < Board
+    attr_reader :board, :code
+    
     ROUNDS = 12
     
     def initialize
@@ -73,13 +76,18 @@ module Classable
         game.feedback
         game.display_board
         @@turn += 1
-        
+        # puts "#{self.board}"
+        # puts "#{game.code}"
       end
+    end
+
+    def self.code
+      @code
     end
 
     def self.over?
       return true if @@turn == ROUNDS
-      return true if @row_contents == @code
+      #return true if @board == self.code 
     end
   end
 end
