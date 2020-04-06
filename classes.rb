@@ -35,11 +35,14 @@ module Classable
       puts "\nCurrent Board:"
       puts " _____________________________________"
       @board.each_with_index do |e,i|
-        puts "|#{e.join(' ')}#{" " * (27 - (e.join(' ').length))}| #{
-              @board_feedback[i].join(' ')}#{" " * 
-              (8 - (@board_feedback[i].join(' ').length))}|"
+        # Adds spaces between '|' based on character length of input & feedback
+        color_spacing = " " * (27 - (e.join(' ').length))
+        feedback_spacing = " " * (8 - (@board_feedback[i].join(' ').length))
+
+        puts "|#{e.join(' ')}#{color_spacing}| #{
+              @board_feedback[i].join(' ')}#{feedback_spacing}|"
       end
-      puts "|_____________________________________|\n\n"
+      puts "|___________________________|_________|\n\n"
     end
     
     private
