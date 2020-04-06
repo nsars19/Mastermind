@@ -52,10 +52,6 @@ module Classable
   class Game < Board
     ROUNDS = 12
 
-    def self.code
-      @code
-    end
-
     def self.game_start
       @game = Board.new
       @@turn = 0
@@ -91,7 +87,7 @@ module Classable
       codemaker_or_codebreaker == codebreaker ? @code_breaker = true : @code_breaker = false
     end
 
-    
+
   end
 end
 
