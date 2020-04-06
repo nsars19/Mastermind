@@ -83,12 +83,18 @@ module Classable
   end
 
   class Creator < Game
-    def initialize codemaker_or_codebreaker
-      codemaker_or_codebreaker == codemaker   ? @code_maker   = true : @code_maker   = false
-      codemaker_or_codebreaker == codebreaker ? @code_breaker = true : @code_breaker = false
+    def self.game_start
+
+    end
+    
+    private
+    def codemaker?
+      true if @code_maker
     end
 
-
+    def codebreaker?
+      true if @code_breaker
+    end
   end
 end
 
