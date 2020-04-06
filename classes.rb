@@ -80,11 +80,11 @@ module Classable
     end
 
     def self.win?
-      @game.board.last == @game.code ? true : false
+      @game.board.last == @game.code
     end
 
     def self.lose?
-      @@turn == ROUNDS ? true : false
+      @@turn == ROUNDS
     end
   end
 
