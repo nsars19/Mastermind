@@ -51,9 +51,7 @@ module Classable
     end
 
     def create_code_cpu
-      4.times do
-        @code << @@colors[rand(6)]
-      end
+      4.times { @code << @@colors[rand(6)] }
     end
   end
 
@@ -62,7 +60,8 @@ module Classable
     
     def initialize
       super
-      4.times { @code << @@colors[rand(6)] }
+      @code = []
+      create_code_cpu
     end
 
     def self.game_start
@@ -74,14 +73,13 @@ module Classable
         game.feedback
         game.display_board
         @@turn += 1
-        break if Game.over?
+        
       end
     end
 
     def self.over?
       return true if @@turn == ROUNDS
-      return true if @feedback.join('') == "XXXX"
-      false
+      return true if @row_contents == @code
     end
   end
 end
