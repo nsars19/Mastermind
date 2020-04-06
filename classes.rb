@@ -35,7 +35,8 @@ module Classable
       puts "\nCurrent Board:"
       puts " _____________________________________"
       @board.each_with_index do |e,i|
-        puts "|#{e.join(' ')}#{" " * (27 - (e.join(' ').length))}| #{@board_feedback[i].join(' ')}#{" " * 
+        puts "|#{e.join(' ')}#{" " * (27 - (e.join(' ').length))}| #{
+              @board_feedback[i].join(' ')}#{" " * 
               (8 - (@board_feedback[i].join(' ').length))}|"
       end
       puts "|_____________________________________|\n\n"
