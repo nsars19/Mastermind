@@ -60,7 +60,7 @@ module Classable
       puts @game.code
       until Game.over?
         puts "Enter your guess:"
-        @game.create_guess(gets.chomp.split)
+        @game.create_guess(gets.chomp.split[0..3])
         @game.feedback
         @game.display_board
         @@turn += 1
