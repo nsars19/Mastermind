@@ -7,29 +7,28 @@ module Classable
       @@colors = %w[red orange yellow green blue purple]
       @board = []
       @code = Array.new(4, nil)
-      @feedback_holder = []
       @board_feedback = []
-      create_code_cpu if make_or_break == :cpu
+      create_code_cpu    if make_or_break == :cpu
       create_code_player if make_or_break == :player
     end
 
     def create_guess *colors
-      @guess_contents = []
-      @guess_contents = colors
-      @board << @guess_contents.flatten
+      guess_contents = []
+      guess_contents = colors
+      @board << guess_contents.flatten
     end
     
     def feedback 
-      @feedback_holder = []
+      feedback_holder = []
       guess = @board.last
       guess.each_with_index do |e, i|
         if @code[i] == e
-          @feedback_holder << "X"
+          feedback_holder << "X"
         elsif @code.include?(e)
-          @feedback_holder << "O" 
+          feedback_holder << "O" 
         end
       end
-      @board_feedback << @feedback_holder.sort!.reverse!
+      @board_feedback << feedback_holder.sort!.reverse!
     end
 
     def display_board
