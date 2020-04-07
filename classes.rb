@@ -69,7 +69,7 @@ module Classable
         @game.display_board
         @@turn += 1
       end
-      puts "\nYOU WIN!" if Game.win?
+      puts "\nYOU WIN!"  if Game.win?
       puts "\nYOU LOSE!" if Game.lose? unless Game.win?
     end
 
