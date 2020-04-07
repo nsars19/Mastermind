@@ -3,7 +3,7 @@ require_relative 'codebreaker_helper'
 class Mastermind
   class Board
     attr_accessor :code
-    attr_reader :board
+    attr_reader :board, :color_index
 
     def initialize
       @@colors = %w[red orange yellow green blue purple]
@@ -93,9 +93,8 @@ class Mastermind
       until Game.over?
         @game.feedback
         @game.display_board
-        ### helper method to go here
-        @@turn += 1
         Solvable.solve_code
+        @@turn += 1
         sleep(1)
       end
       puts "\nYOU WIN!"  if Game.win?
