@@ -104,7 +104,7 @@ module Classable
       end
 
       Classable::Game.game_start_codebreaker  if @make_or_break == "guess"
-      Classable::Game.game_start_codemaker if @make_or_break == "create"
+      Classable::Game.game_start_codemaker    if @make_or_break == "create"
     end
   end
 end
