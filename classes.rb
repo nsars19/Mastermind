@@ -107,6 +107,9 @@ module Classable
       Classable::Game.game_start_codemaker    if @make_or_break == "create"
     end
   end
+
+  class AI < Game
+  end
 end
 
 Classable::Creator.game_start
