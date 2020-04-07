@@ -3,18 +3,27 @@ module Classable
     attr_accessor :code
     attr_reader :board
 
-    def initialize make_or_break
+    def initialize
       @@colors = %w[red orange yellow green blue purple]
       @board = []
       @code = Array.new(4, nil)
       @board_feedback = []
-      create_code_cpu    if make_or_break == :cpu
-      create_code_player if make_or_break == :player
     end
 
     def create_guess *colors
       guess_contents = []
       guess_contents = colors
+      @board << guess_contents.flatten
+    end
+
+    def create_guess_cpu
+      guess_contents = []
+      last_fb = @board_feedback.last
+      last_brd = @board.last
+      if last_fb.include? "X"
+        
+      end
+      4.times { guess_contents << @@colors[rand(6)]}
       @board << guess_contents.flatten
     end
     
@@ -46,10 +55,9 @@ module Classable
     end
     
     def create_code_player *colors
-      @code = colors[0..3]
+      @code = colors[0].split
     end
-    private
-
+    
     def create_code_cpu
       4.times { |i| @code[i] = @@colors[rand(6)] }
     end
@@ -59,8 +67,9 @@ module Classable
     ROUNDS = 12
 
     def self.game_start_codebreaker
-      @game = Board.new(:cpu)
+      @game = Board.new
       @@turn = 0
+      @game.create_code_cpu
       puts @game.code #### REMOVE ME WHEN FINISHED
       until Game.over?
         puts "Enter your guess:"
@@ -74,10 +83,20 @@ module Classable
     end
 
     def self.game_start_codemaker
-      game = Board.new(:player)
+      @game = Board.new
+      @@turn = 0
       puts "Please select four colors from the list:\n#{@@colors.join(', ')}"
-      game.create_code_player(gets.chomp)
-      p game.code
+      @game.create_code_player(gets.chomp)
+      p @game.code #### REMOVE ME WHEN FINISHED
+      until Game.over?
+        @game.create_guess_cpu
+        @game.feedback
+        @game.display_board
+        @@turn += 1
+        sleep(1)
+      end
+      puts "\nYOU WIN!"  if Game.win?
+      puts "\nYOU LOSE!" if Game.lose? unless Game.win?
     end
 
     private
@@ -106,9 +125,6 @@ module Classable
       Classable::Game.game_start_codebreaker  if @make_or_break == "guess"
       Classable::Game.game_start_codemaker    if @make_or_break == "create"
     end
-  end
-
-  class AI < Game
   end
 end
 
