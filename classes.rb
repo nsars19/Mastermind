@@ -10,7 +10,7 @@ class Mastermind
       @board = []
       @code = Array.new(4, nil)
       @board_feedback = []
-      @color_index = {}
+      @color_index = Hash.new(0)
     end
 
     def create_guess *colors
@@ -24,14 +24,16 @@ class Mastermind
       4.times { guess_contents << @@colors[rand(6)]}
       @board << guess_contents.flatten
     end
-    
-    def feedback 
+
+    def feedback
+      current_guess = @board.last
+      guess_counts = Hash.new(0)
       feedback_holder = []
-      guess = @board.last
-      guess.each_with_index do |e, i|
-        if @code[i] == e
-          feedback_holder << "X"
-        elsif @code.include?(e)
+      current_guess.each { |color| guess_counts[color] += 1 }
+
+      current_guess.each_with_index { |e, i| feedback_holder << "X" if @code[i] == e }
+      guess_counts.keys.each_with_index do |e, i|
+        if @code.include?(e) && @code[i] != e
           feedback_holder << "O" 
         end
       end
