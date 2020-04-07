@@ -1,4 +1,6 @@
-module Classable
+require_relative 'codebreaker_helper'
+
+class Mastermind
   class Board
     attr_accessor :code
     attr_reader :board
@@ -18,11 +20,6 @@ module Classable
 
     def create_guess_cpu
       guess_contents = []
-      last_fb = @board_feedback.last
-      last_brd = @board.last
-      if last_fb.include? "X"
-        
-      end
       4.times { guess_contents << @@colors[rand(6)]}
       @board << guess_contents.flatten
     end
@@ -64,6 +61,7 @@ module Classable
   end
 
   class Game < Board
+    include Solvable
     ROUNDS = 12
 
     def self.game_start_codebreaker
@@ -88,11 +86,13 @@ module Classable
       puts "Please select four colors from the list:\n#{@@colors.join(', ')}"
       @game.create_code_player(gets.chomp)
       p @game.code #### REMOVE ME WHEN FINISHED
+      @game.create_guess_cpu
       until Game.over?
-        @game.create_guess_cpu
         @game.feedback
         @game.display_board
+        ### helper method to go here
         @@turn += 1
+        Solvable.solve_code
         sleep(1)
       end
       puts "\nYOU WIN!"  if Game.win?
@@ -122,10 +122,10 @@ module Classable
         @make_or_break = gets.chomp
       end
 
-      Classable::Game.game_start_codebreaker  if @make_or_break == "guess"
-      Classable::Game.game_start_codemaker    if @make_or_break == "create"
+      Mastermind::Game.game_start_codebreaker  if @make_or_break == "guess"
+      Mastermind::Game.game_start_codemaker    if @make_or_break == "create"
     end
   end
 end
 
-Classable::Creator.game_start
+Mastermind::Creator.game_start
