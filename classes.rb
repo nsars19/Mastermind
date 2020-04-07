@@ -73,6 +73,13 @@ module Classable
       puts "\nYOU LOSE!" if Game.lose? unless Game.win?
     end
 
+    def self.game_start_codemaker
+      game = Board.new(:player)
+      puts "Please select four colors from the list:\n#{@@colors.join(', ')}"
+      game.create_code_player(gets.chomp)
+      p game.code
+    end
+
     private
     def self.over?
       return true if @@turn == ROUNDS
@@ -89,7 +96,7 @@ module Classable
   end
 
   class Creator < Game
-    def self.game_start_codebreaker
+    def self.game_start
       puts "Would you like to create the code or guess the code?"
       until @make_or_break == "create" || @make_or_break == "guess"
         puts "Please choose 'create' or 'guess'"
@@ -97,21 +104,9 @@ module Classable
       end
 
       Classable::Game.game_start_codebreaker  if @make_or_break == "guess"
-      Classable::Creator.game_start_codemaker if @make_or_break == "create"
-    end
-    
-    private
-    def self.game_start_codemaker
-      game = Board.new(:player)
-      puts "Please select four colors from the list:\n#{@@colors.join(', ')}"
-      game.create_code_player(gets.chomp)
-      p game.code
-    end
-
-    def self.create_code_player *colors
-      @code = colors[0..3]
+      Classable::Game.game_start_codemaker if @make_or_break == "create"
     end
   end
 end
 
-Classable::Creator.game_start_codebreaker
+Classable::Creator.game_start
