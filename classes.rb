@@ -10,6 +10,7 @@ class Mastermind
       @board = []
       @code = Array.new(4, nil)
       @board_feedback = []
+      @color_index = {}
     end
 
     def create_guess *colors
@@ -53,10 +54,12 @@ class Mastermind
     
     def create_code_player *colors
       @code = colors[0].split
+      @code.each_with_index { |e, i| @color_index[i] = e }
     end
     
     def create_code_cpu
       4.times { |i| @code[i] = @@colors[rand(6)] }
+      @code.each_with_index {|e, i| @color_index[i] = e}
     end
   end
 
