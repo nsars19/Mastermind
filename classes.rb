@@ -47,7 +47,8 @@ class Mastermind
         feedback_spacing = " " * (8 - (@board_feedback[i].join(' ').length))
 
         puts "|#{e.join(' ')}#{color_spacing}| #{
-              @board_feedback[i].join(' ')}#{feedback_spacing}|"
+              @board_feedback[i].join(' ')}#{
+              feedback_spacing}|"
       end
       puts "|___________________________|_________|\n\n"
     end
