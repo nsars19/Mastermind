@@ -126,8 +126,8 @@ class Mastermind
         @make_or_break = gets.chomp
       end
 
-      Mastermind::Game.game_start_codebreaker  if @make_or_break == "guess"
-      Mastermind::Game.game_start_codemaker    if @make_or_break == "create"
+      Game.game_start_codebreaker  if @make_or_break == "guess"
+      Game.game_start_codemaker    if @make_or_break == "create"
     end
   end
 end
