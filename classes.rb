@@ -24,8 +24,8 @@ class Mastermind
       @board << guess_contents.flatten
     end
 
-    def feedback
-      current_guess = @board.last
+    def feedback current_guess
+      #current_guess = @board.last
       guess_counts = Hash.new(0)
       feedback_holder = []
       current_guess.each { |color| guess_counts[color] += 1 }
@@ -84,7 +84,7 @@ class Mastermind
       until Game.over?
         puts "Enter your guess:"
         @game.create_guess(gets.chomp.split[0..3])
-        @game.feedback
+        @game.feedback(@game.board[-1])
         @game.display_board
         @@turn += 1
       end
@@ -100,7 +100,7 @@ class Mastermind
       p @game.code #### REMOVE ME WHEN FINISHED
       @game.create_guess_cpu
       until Game.over?
-        @game.feedback
+        @game.feedback(@game.board[-1])
         @game.display_board
         Cpu.solve_code
         @@turn += 1
@@ -143,6 +143,7 @@ class Mastermind
     end
 
     def self.solve_code
+    end
   end
 
   class Creator < Game
@@ -159,4 +160,4 @@ class Mastermind
   end
 end
 
-#Mastermind::Creator.game_start
+Mastermind::Creator.game_start
