@@ -126,9 +126,23 @@ class Mastermind
   end
 
   class Cpu < Game
-    def self.solve_code
-      
+    def self.create_codeset
+      possible_codes = []
+      @@color_index = ci
+      # Create set of all possible codes
+      6.times do |i_1|
+        6.times do |i_2|
+          6.times do |i_3|
+            6.times do |i_4|
+              possible_codes << [ci[i_1], ci[i_2], ci[i_3], ci[i_4]]
+            end
+          end
+        end
+      end
+      possible_codes
     end
+
+    def self.solve_code
   end
 
   class Creator < Game
