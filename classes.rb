@@ -42,7 +42,7 @@ class Mastermind
       puts "\nCurrent Board:"
       puts " _____________________________________"
       @board.each_with_index do |e,i|
-        # Adds spaces between '|' based on length of character input & feedback
+        # Adds spaces between '|' based on character length of input & feedback
         # 27 spaces minus however many letters there are in each row
         color_spacing = " " * (27 - (e.join(' ').length))
         feedback_spacing = " " * (8 - (@board_feedback[i].join(' ').length))
