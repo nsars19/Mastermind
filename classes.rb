@@ -1,5 +1,3 @@
-require_relative 'codebreaker_helper'
-
 class Mastermind
   class Board
     attr_accessor :code
@@ -66,7 +64,6 @@ class Mastermind
   end
 
   class Game < Board
-    include Solvable
     ROUNDS = 12
 
     def self.game_start_codebreaker
@@ -95,7 +92,7 @@ class Mastermind
       until Game.over?
         @game.feedback
         @game.display_board
-        Solvable.solve_code
+        Cpu.solve_code
         @@turn += 1
         sleep(1)
       end
@@ -115,6 +112,12 @@ class Mastermind
 
     def self.lose?
       @@turn == ROUNDS
+    end
+  end
+
+  class Cpu < Game
+    def self.solve_code
+      
     end
   end
 
