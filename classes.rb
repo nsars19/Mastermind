@@ -25,7 +25,6 @@ class Mastermind
     end
 
     def feedback current_guess
-      #current_guess = @board.last
       guess_counts = Hash.new(0)
       feedback_holder = []
       current_guess.each { |color| guess_counts[color] += 1 }
