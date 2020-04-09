@@ -29,10 +29,27 @@ class Mastermind
       feedback_holder = []
       current_guess.each { |color| guess_counts[color] += 1 }
 
-      current_guess.each_with_index { |e, i| feedback_holder << "X" if @code[i] == e }
+      done_once = false
+      current_guess.each_with_index do |e, i| 
+        feedback_holder << "X" if @code[i] == e
+        # if @code.include?(e) && i != @code.index(e)
+        #   if guess_counts[e] > 1 && guess_counts[e] == @code.count(e) 
+        #     feedback_holder << "O" unless done_once
+        #     done_once = true
+        #   end
+        #   feedback_holder << "O" unless guess_counts[e] > 1 && guess_counts[e] == @code.count(e) 
+        # end
+        # p done_once
+        # if @code.include?(e) && @code[i] != e 
+        #   feedback_holder << "O" unless guess_counts[e] > 1 && @code.count(e) == 1
+        # end
+        #feedback_holder << "O" if @code.include?(guess_counts.keys[e]) && @code[i] != e
+      end
       guess_counts.keys.each_with_index do |e, i|
-        if @code.include?(e) && @code[i] != e
-          feedback_holder << "O" 
+        feedback_holder << "O" if @code.include?(e) && @code[i] != e
+        # feedback_holder << "O" if @code.count(e) > 1 && @code.count(e) == guess_counts[e] && @code[i] != e
+        if @code.count(e) > 1 && guess_counts[e] > 1 && @code.count(e) != guess_counts[e]
+          [@code.count(e), guess_counts[e]].min.times { feedback_holder << "O" } if @code[i] != e
         end
       end
       @board_feedback << feedback_holder.sort!.reverse!
@@ -45,10 +62,10 @@ class Mastermind
         # Adds spaces between '|' based on character length of input & feedback
         # 27 spaces minus however many letters there are in each row
         color_spacing = " " * (27 - (e.join(' ').length))
-        feedback_spacing = " " * (8 - (@board_feedback[i].join(' ').length))
+        feedback_spacing = " " * (8 - (@board_feedback[i][0..3].join(' ').length))
 
         puts "|#{e.join(' ')}#{color_spacing}| #{
-              @board_feedback[i].join(' ')}#{
+              @board_feedback[i][0..3].join(' ')}#{
               feedback_spacing}|"
       end
       puts "|___________________________|_________|\n\n"
@@ -125,23 +142,46 @@ class Mastermind
   end
 
   class Cpu < Game
+    def initialize
+      @@possible_codes = []
+    end
+
+    def self.solve_code
+      @game = Board.new
+      @game.create_code_cpu
+      @game.create_guess(Cpu.first_guess)
+      @game.feedback(@game.board[-1])
+    end
+
     def self.create_codeset
-      possible_codes = []
+      @@possible_codes = []
       @@color_index = ci
       # Create set of all possible codes
       6.times do |i_1|
         6.times do |i_2|
           6.times do |i_3|
             6.times do |i_4|
-              possible_codes << [ci[i_1], ci[i_2], ci[i_3], ci[i_4]]
+              @@possible_codes << [ci[i_1], ci[i_2], ci[i_3], ci[i_4]]
             end
           end
         end
       end
-      possible_codes
+      @@possible_codes
     end
 
-    def self.solve_code
+    def self.compare_feedback
+      Cpu.new
+      @game = Board.new
+      initial_feedback = @game.feedback(Cpu.first_guess)
+      same_feedback = []
+      @@possible_codes.each do |e|
+        same_feedback << e if @game.feedback(e) == initial_feedback
+      end
+      p same_feedback
+    end
+
+    def self.first_guess
+      %w[red red orange orange]
     end
   end
 
