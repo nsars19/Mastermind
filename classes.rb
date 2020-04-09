@@ -65,10 +65,14 @@ class Mastermind
     def cpu_better_guess
       guess = Array.new(4, nil)
       colors_temp = @@colors
+      wrong_spot = []
       @board_feedback[-1].each_with_index do |e, i|
         guess[i] = @board[-1][i] if e == "X"
-        guess[i] = @@colors[rand(6)] if guess[i] == " " || guess[i] == "O"
-        guess[i] = @@colors[rand(6)] if guess[i] == nil
+        guess[i] = @@colors[rand(6)] if e == " " || guess[i] == nil
+        wrong_spot << i if e == "O"
+      end
+      wrong_spot.shuffle.each do |e|
+        guess[e] = @board[-1][e]
       end
       @board << guess
     end
@@ -186,8 +190,8 @@ class Mastermind
         @make_or_break = gets.chomp
       end
 
-      Game.game_start_codebreaker  if @make_or_break == "guess"
-      Game.game_start_codemaker    if @make_or_break == "create"
+      Game.game_start_codebreaker if @make_or_break == "guess"
+      Game.game_start_codemaker   if @make_or_break == "create"
     end
   end
 end
