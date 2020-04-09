@@ -25,32 +25,10 @@ class Mastermind
     end
 
     def feedback current_guess
-      guess_counts = Hash.new(0)
       feedback_holder = []
-      current_guess.each { |color| guess_counts[color] += 1 }
-
-      done_once = false
       current_guess.each_with_index do |e, i| 
         feedback_holder << "X" if @code[i] == e
-        # if @code.include?(e) && i != @code.index(e)
-        #   if guess_counts[e] > 1 && guess_counts[e] == @code.count(e) 
-        #     feedback_holder << "O" unless done_once
-        #     done_once = true
-        #   end
-        #   feedback_holder << "O" unless guess_counts[e] > 1 && guess_counts[e] == @code.count(e) 
-        # end
-        # p done_once
-        # if @code.include?(e) && @code[i] != e 
-        #   feedback_holder << "O" unless guess_counts[e] > 1 && @code.count(e) == 1
-        # end
-        #feedback_holder << "O" if @code.include?(guess_counts.keys[e]) && @code[i] != e
-      end
-      guess_counts.keys.each_with_index do |e, i|
         feedback_holder << "O" if @code.include?(e) && @code[i] != e
-        # feedback_holder << "O" if @code.count(e) > 1 && @code.count(e) == guess_counts[e] && @code[i] != e
-        if @code.count(e) > 1 && guess_counts[e] > 1 && @code.count(e) != guess_counts[e]
-          [@code.count(e), guess_counts[e]].min.times { feedback_holder << "O" } if @code[i] != e
-        end
       end
       @board_feedback << feedback_holder.sort!.reverse!
     end
@@ -96,6 +74,7 @@ class Mastermind
       @game = Board.new
       @@turn = 0
       @game.create_code_cpu
+      #@game.code = %w[red red blue blue]
       puts @game.code #### REMOVE ME WHEN FINISHED
       until Game.over?
         puts "Enter your guess:"
