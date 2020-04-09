@@ -1,7 +1,7 @@
 class Mastermind
   class Board
     attr_accessor :code
-    attr_reader :board
+    attr_reader :board, :board_feedback
 
     def initialize
       @@colors = %w[red orange yellow green blue purple]
@@ -29,14 +29,15 @@ class Mastermind
       current_guess.each_with_index do |e, i| 
         feedback_holder << "X" if @code[i] == e
         feedback_holder << "O" if @code.include?(e) && @code[i] != e
+        feedback_holder << " " if !@code.include?(e)
       end
-      @board_feedback << feedback_holder.sort!.reverse!
+      @board_feedback << feedback_holder#.sort!.reverse!
     end
 
     def display_board
       puts "\nCurrent Board:"
       puts " _____________________________________"
-      @board.each_with_index do |e,i|
+      @board.each_with_index do |e, i|
         # Adds spaces between '|' based on character length of input & feedback
         # 27 spaces minus however many letters there are in each row
         color_spacing = " " * (27 - (e.join(' ').length))
@@ -59,6 +60,17 @@ class Mastermind
 
     def color_index
       @@color_index
+    end
+
+    def cpu_better_guess
+      guess = Array.new(4, nil)
+      colors_temp = @@colors
+      @board_feedback[-1].each_with_index do |e, i|
+        guess[i] = @board[-1][i] if e == "X"
+        guess[i] = @@colors[rand(6)] if guess[i] == " " || guess[i] == "O"
+        guess[i] = @@colors[rand(6)] if guess[i] == nil
+      end
+      @board << guess
     end
 
     private
@@ -89,7 +101,7 @@ class Mastermind
 
     def self.game_start_codemaker
       @game = Board.new
-      @@turn = 0
+      @@turn = 1
       puts "Please select four colors from the list:\n#{@@colors.join(', ')}"
       @game.create_code_player(gets.chomp)
       p @game.code #### REMOVE ME WHEN FINISHED
@@ -97,12 +109,14 @@ class Mastermind
       until Game.over?
         @game.feedback(@game.board[-1])
         @game.display_board
-        Cpu.solve_code
+        @game.cpu_better_guess
         @@turn += 1
-        sleep(1)
+        sleep(0.5)
       end
-      puts "\nYOU WIN!"  if Game.win?
-      puts "\nYOU LOSE!" if Game.lose? unless Game.win?
+      @game.feedback(@game.board[-1])
+      @game.display_board
+      puts "\nCOMPUTER WINS!"  if Game.win?
+      puts "\nCOMPUTER LOSES!" if Game.lose? unless Game.win?
     end
 
     private
@@ -128,7 +142,7 @@ class Mastermind
     def self.solve_code
       @game = Board.new
       @game.create_code_cpu
-      @game.create_guess(Cpu.first_guess)
+      @game.create_guess_cpu
       @game.feedback(@game.board[-1])
     end
 
