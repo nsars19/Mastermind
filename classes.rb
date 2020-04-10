@@ -8,6 +8,7 @@ class Mastermind
       @@color_index = Hash.new(0)
       @board = []
       @code = Array.new(4, nil)
+      @code_num = []
       @board_feedback = []
       Board.populate_color_index
     end
@@ -52,29 +53,61 @@ class Mastermind
     
     def create_code_player *colors
       @code = colors[0].split
+      @@color_index.each do |k, v|
+        colors[0].split.each do |e|
+          @code_num << k if e == v
+        end
+      end
     end
     
     def create_code_cpu
       4.times { |i| @code[i] = @@colors[rand(6)] }
+      @@color_index.each do |k, v|
+        colors[0].split.each do |e|
+          @code_num << k if e == v
+        end
+      end
     end
 
     def color_index
       @@color_index
     end
-
+    
     def cpu_better_guess
-      guess = Array.new(4, nil)
-      colors_temp = @@colors
-      wrong_spot = []
-      @board_feedback[-1].each_with_index do |e, i|
-        guess[i] = @board[-1][i] if e == "X"
-        guess[i] = @@colors[rand(6)] if e == " " || guess[i] == nil
-        wrong_spot << i if e == "O"
+      last_guess = @board[-1]
+      next_guess = Array.new(4, nil)
+      right_color = []
+      multiples = []
+      position_set = Array.new(4, false)
+      colors_remaining = @@colors
+
+      last_guess.each_with_index do |e, i|
+        if @code[i] == e
+          next_guess[i] = e
+          position_set[i] = true
+        elsif @code.count(e) < last_guess.count(e) && @code.include?(e)
+          multiples << e unless position_set[i]
+        else 
+          right_color << e if @code.include?(e)
+        end
+        colors_remaining -= [e] if !@code.include?(e)
       end
-      wrong_spot.shuffle.each do |e|
-        guess[e] = @board[-1][e]
+
+      multiples.uniq.each { |e| right_color << e }
+      next_guess.count(nil).times do |i|
+        next_guess[i] = right_color.shuffle[i] if next_guess[i] == nil
       end
-      @board << guess
+
+      until next_guess.all? { |e| e != nil }
+        cr_length = colors_remaining.length
+        nil_idx = next_guess.index(nil)
+        next_guess[nil_idx] = colors_remaining[rand(cr_length)]
+      end
+
+      p next_guess
+      p "#{multiples}"
+      p "#{right_color}"
+      @board << next_guess
     end
 
     private
@@ -152,7 +185,7 @@ class Mastermind
 
     def self.create_codeset
       @@possible_codes = []
-      @@color_index = ci
+      ci = @@color_index
       # Create set of all possible codes
       6.times do |i_1|
         6.times do |i_2|
