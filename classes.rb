@@ -81,6 +81,15 @@ class Mastermind
       position_set = Array.new(4, false)
       colors_remaining = @@colors
 
+      # color_options = Array.new(4, @@colors)
+      # test_code = @code
+      # color_options.each_with_index do |el, idx|
+      #   el.each do |e|
+      #     next_guess[idx] = e if test_code[idx] == e
+      #     color_options[idx] - [e] if !test_code.include?(e)
+      #   end
+      # end
+
       last_guess.each_with_index do |e, i|
         if @code[i] == e
           next_guess[i] = e
@@ -95,9 +104,10 @@ class Mastermind
 
       multiples.uniq.each { |e| right_color << e }
       next_guess.count(nil).times do |i|
-        next_guess[i] = right_color.shuffle[i] if next_guess[i] == nil
+        nil_idx = next_guess.index(nil)
+        next_guess[nil_idx] = right_color.shuffle[i] if next_guess[i] == nil
       end
-
+      
       until next_guess.all? { |e| e != nil }
         cr_length = colors_remaining.length
         nil_idx = next_guess.index(nil)
