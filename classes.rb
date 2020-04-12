@@ -74,7 +74,7 @@ class Mastermind
         feedback_holder << "O" if @code.include?(e) && @code[i] != e
         feedback_holder << " " if !@code.include?(e)
       end
-      @board_feedback << feedback_holder#.sort!.reverse!
+      @board_feedback << feedback_holder
     end
     
     def display_board
