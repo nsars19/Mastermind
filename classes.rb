@@ -81,25 +81,24 @@ class Mastermind
       position_set = Array.new(4, false)
       colors_remaining = @@colors
 
-      # color_options = Array.new(4, @@colors)
-      # test_code = @code
-      # color_options.each_with_index do |el, idx|
-      #   el.each do |e|
-      #     next_guess[idx] = e if test_code[idx] == e
-      #     color_options[idx] - [e] if !test_code.include?(e)
-      #   end
-      # end
+      color_options = Array.new(4, @@colors)
+      test_code = @code
+      color_options.each_with_index do |el, idx|
+        el.each do |e|
+          color_options[idx] -= [e] if test_code[idx] != e
+        end
+      end
 
       last_guess.each_with_index do |e, i|
         if @code[i] == e
           next_guess[i] = e
           position_set[i] = true
-        elsif @code.count(e) < last_guess.count(e) && @code.include?(e)
-          multiples << e unless position_set[i]
+        elsif (@code.count(e) < last_guess.count(e)) && @code.include?(e)
+          multiples << e unless position_set[last_guess.index(e)]
         else 
-          right_color << e if @code.include?(e)
+          right_color << e if @code.include?(e) && (@code.count(e) >= last_guess.count(e))
         end
-        colors_remaining -= [e] if !@code.include?(e)
+        @@colors -= [e] if !@code.include?(e)
       end
 
       multiples.uniq.each { |e| right_color << e }
@@ -108,15 +107,21 @@ class Mastermind
         next_guess[nil_idx] = right_color.shuffle[i] if next_guess[i] == nil
       end
       
-      until next_guess.all? { |e| e != nil }
-        cr_length = colors_remaining.length
+      until next_guess.count(nil) == 0
+        colors_size = @@colors.size
         nil_idx = next_guess.index(nil)
-        next_guess[nil_idx] = colors_remaining[rand(cr_length)]
+        next_guess[nil_idx] = @@colors[rand(colors_size)]
       end
-
-      p next_guess
-      p "#{multiples}"
-      p "#{right_color}"
+    
+      @board.each_with_index do |outer_e, outer_i|
+        @board[outer_i].each_with_index do |e, i|
+          if next_guess[i] == @board[outer_i][i] && @board[outer_i][i] != @code[i]
+            until next_guess[i] != @board[outer_i][i]
+              next_guess[i] = colors_remaining[rand(colors_remaining.size)]
+            end
+          end
+        end
+      end
       @board << next_guess
     end
 
