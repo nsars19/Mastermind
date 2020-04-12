@@ -1,7 +1,7 @@
 class Mastermind
   class Board
     attr_accessor :code
-    attr_reader :board, :board_feedback
+    attr_reader :board
 
     ROUNDS = 12
 
