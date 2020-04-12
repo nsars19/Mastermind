@@ -39,7 +39,7 @@ class Mastermind
         @game.display_board
         @game.cpu_better_guess
         @@turn += 1
-        sleep(0.5)
+        sleep(1)
       end
       @game.feedback(@game.board[-1])
       @game.display_board
@@ -99,7 +99,6 @@ class Mastermind
       right_color = []
       multiples = []
       position_set = Array.new(4, false)
-      colors_remaining = @@colors
 
       last_guess.each_with_index do |e, i|
         if @code[i] == e
@@ -129,7 +128,7 @@ class Mastermind
         @board[outer_i].each_with_index do |e, i|
           if next_guess[i] == @board[outer_i][i] && @board[outer_i][i] != @code[i]
             until next_guess[i] != @board[outer_i][i]
-              next_guess[i] = colors_remaining[rand(colors_remaining.size)]
+              next_guess[i] = @@colors[rand(@@colors.size)]
             end
           end
         end
